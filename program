@@ -10,6 +10,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeClassifier
 
 
 # Load the dataset
@@ -108,3 +109,83 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic')
 plt.legend(loc="lower right")
 plt.show()
+
+# Initialize the Decision Tree model
+dec_tree = DecisionTreeClassifier()
+
+# Define the hyperparameters to tune
+param_grid = {
+    'max_depth': [3, 5, 7, 10, None],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
+
+# Perform GridSearchCV to find the best hyperparameters
+grid_search_dec_tree = GridSearchCV(dec_tree, param_grid, cv=5, scoring='accuracy')
+grid_search_dec_tree.fit(X_train, y_train)
+
+# Best parameters and model
+best_dec_tree = grid_search_dec_tree.best_estimator_
+print("Best parameters for Decision Tree:", grid_search_dec_tree.best_params_)
+
+# Evaluate the model
+y_pred_dec_tree = best_dec_tree.predict(X_test)
+print("Classification Report for Decision Tree:\n", classification_report(y_test, y_pred_dec_tree))
+print("Confusion Matrix for Decision Tree:\n", confusion_matrix(y_test, y_pred_dec_tree))
+
+# ROC curve
+fpr, tpr, _ = roc_curve(y_test, best_dec_tree.predict_proba(X_test)[:,1])
+roc_auc = auc(fpr, tpr)
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic')
+plt.legend(loc="lower right")
+plt.show()
+
+Random Forest
+
+from sklearn.ensemble import RandomForestClassifier
+
+# Initialize the Random Forest model
+rand_forest = RandomForestClassifier()
+
+# Define the hyperparameters to tune
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [3, 5, 7, 10, None],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
+
+# Perform GridSearchCV to find the best hyperparameters
+grid_search_rand_forest = GridSearchCV(rand_forest, param_grid, cv=5, scoring='accuracy')
+grid_search_rand_forest.fit(X_train, y_train)
+
+# Best parameters and model
+best_rand_forest = grid_search_rand_forest.best_estimator_
+print("Best parameters for Random Forest:", grid_search_rand_forest.best_params_)
+
+# Evaluate the model
+y_pred_rand_forest = best_rand_forest.predict(X_test)
+print("Classification Report for Random Forest:\n", classification_report(y_test, y_pred_rand_forest))
+print("Confusion Matrix for Random Forest:\n", confusion_matrix(y_test, y_pred_rand_forest))
+
+# ROC curve
+fpr, tpr, _ = roc_curve(y_test, best_rand_forest.predict_proba(X_test)[:,1])
+roc_auc = auc(fpr, tpr)
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic')
+plt.legend(loc="lower right")
+plt.show()
+

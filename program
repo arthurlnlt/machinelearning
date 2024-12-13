@@ -11,6 +11,8 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+
 
 
 # Load the dataset
@@ -71,6 +73,13 @@ X_preprocessed = preprocessor.fit_transform(X)
 print(X_preprocessed)
 
 
+
+####################
+# LOGISTIC REGRESSION #
+####################
+
+
+
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X_preprocessed, y, test_size=0.2, random_state=42)
 
@@ -106,9 +115,16 @@ plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic')
+plt.title('LOGISTIC REGRESSION')
 plt.legend(loc="lower right")
 plt.show()
+
+
+
+#################
+# DECISION TREE #
+#################
+
 
 # Initialize the Decision Tree model
 dec_tree = DecisionTreeClassifier()
@@ -143,13 +159,13 @@ plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic')
+plt.title('DECISION TREE')
 plt.legend(loc="lower right")
 plt.show()
 
-Random Forest
-
-from sklearn.ensemble import RandomForestClassifier
+################
+# RANDOM FOREST#
+################
 
 # Initialize the Random Forest model
 rand_forest = RandomForestClassifier()
@@ -185,7 +201,7 @@ plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic')
+plt.title('Random Forest')
 plt.legend(loc="lower right")
 plt.show()
 

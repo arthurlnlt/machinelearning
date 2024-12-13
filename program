@@ -1,0 +1,38 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+url = 'https://raw.githubusercontent.com/arthurlnlt/machinelearning/refs/heads/main/heart.csv'
+data = pd.read_csv(url)
+
+# Display the first few rows of the dataset
+print(data.head())
+
+# Display information about the dataset
+print(data.info())
+
+# Display descriptive statistics
+print(data.describe())
+
+Visualizing Data Distributions and Relationships
+
+# Visualize data distributions
+sns.pairplot(data, hue='target')
+plt.show()
+
+Identifying Missing Values and Outliers
+
+# Identify missing values
+print(data.isnull().sum())
+
+# Visualize outliers
+sns.boxplot(data=data)
+plt.xticks(rotation=90)
+plt.show()
+
+Summary Statistics
+
+# Calculate summary statistics
+print(data.describe())

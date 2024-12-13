@@ -6,6 +6,10 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
+import matplotlib.pyplot as plt
 
 
 # Load the dataset
@@ -64,3 +68,43 @@ X_preprocessed = preprocessor.fit_transform(X)
 
 # Display preprocessed data
 print(X_preprocessed)
+
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_preprocessed, y, test_size=0.2, random_state=42)
+
+# Initialize the Logistic Regression model
+log_reg = LogisticRegression()
+
+# Define the hyperparameters to tune
+param_grid = {
+    'C': [0.01, 0.1, 1, 10, 100],
+    'solver': ['liblinear', 'lbfgs']
+}
+
+# Perform GridSearchCV to find the best hyperparameters
+grid_search_log_reg = GridSearchCV(log_reg, param_grid, cv=5, scoring='accuracy')
+grid_search_log_reg.fit(X_train, y_train)
+
+# Best parameters and model
+best_log_reg = grid_search_log_reg.best_estimator_
+print("Best parameters for Logistic Regression:", grid_search_log_reg.best_params_)
+
+# Evaluate the model
+y_pred_log_reg = best_log_reg.predict(X_test)
+print("Classification Report for Logistic Regression:\n", classification_report(y_test, y_pred_log_reg))
+print("Confusion Matrix for Logistic Regression:\n", confusion_matrix(y_test, y_pred_log_reg))
+
+# ROC curve
+fpr, tpr, _ = roc_curve(y_test, best_log_reg.predict_proba(X_test)[:,1])
+roc_auc = auc(fpr, tpr)
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic')
+plt.legend(loc="lower right")
+plt.show()

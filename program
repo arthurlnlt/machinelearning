@@ -16,7 +16,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 # Load the dataset
-url = 'https://raw.githubusercontent.com/arthurlnlt/machinelearning/refs/heads/main/heart.csv'
+url = 'https://raw.githubusercontent.com/arthurlnlt/machinelearning/refs/heads/main/rawdataset.csv'
 data = pd.read_csv(url)
 
 # Display the first few rows of the dataset
